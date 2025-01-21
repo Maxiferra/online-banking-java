@@ -12,3 +12,8 @@ Este proyecto es una aplicación web de banca online desarrollada como parte de 
 - **Frontend**: HTML, CSS, Bootstrap.
 - **Base de datos**: MySQL.
 - **Servidor web**: Apache Tomcat.
+
+# Cómo ejecutar el proyecto
+1. Clona este repositorio:   
+ Con Git : git clone https://github.com/Maxiferra/online-banking-java.git
+   
