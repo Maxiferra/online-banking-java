@@ -1,0 +1,110 @@
+ CREATE DATABASE Banco;
+USE Banco;
+
+CREATE TABLE TipoUsuario (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion ENUM('admin', 'usuario') NOT NULL
+);
+
+CREATE TABLE TipoCuenta (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion ENUM('caja de ahorro', 'cuenta corriente') NOT NULL
+);
+
+CREATE TABLE TipoMovimiento (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    descripcion ENUM('alta de cuenta', 'alta de prestamos', 'pago de prestamos', 'transferencias') NOT NULL
+);
+
+CREATE TABLE Provincias (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE Localidades (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    idProvincia INT,
+    FOREIGN KEY (idProvincia) REFERENCES Provincias(ID)
+);
+
+CREATE TABLE Nacionalidades (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE Usuario (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    idTipoUsuario INT,
+    TxtUsuario VARCHAR(50) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    FOREIGN KEY (idTipoUsuario) REFERENCES TipoUsuario(ID)
+);
+
+CREATE TABLE Cliente (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    DNI VARCHAR(20) NOT NULL UNIQUE,
+    CUIL VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    apellido VARCHAR(50) NOT NULL,
+    sexo ENUM('Masculino', 'Femenino', 'Otro') NOT NULL,
+    idNacionalidad INT,
+    fechaNacimiento DATE NOT NULL,
+    direccion VARCHAR(100) NOT NULL,
+    idLocalidad INT,
+    idProvincia INT,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    telefono VARCHAR(20) NOT NULL,
+    idUsuario INT,
+    FOREIGN KEY (idNacionalidad) REFERENCES Nacionalidades(ID),
+    FOREIGN KEY (idLocalidad) REFERENCES Localidades(ID),
+    FOREIGN KEY (idProvincia) REFERENCES Provincias(ID),
+    FOREIGN KEY (idUsuario) REFERENCES Usuario(ID)
+);
+
+CREATE TABLE Cuenta (
+   ID INT AUTO_INCREMENT PRIMARY KEY,
+    DNICliente INT,  -- Corregido el nombre de la columna a 'DNICliente' en lugar de 'IDCliente'
+    FechaCreacion DATE NOT NULL,
+    idTipoCuenta INT,
+    numeroCuenta VARCHAR(30) NOT NULL UNIQUE,
+    CBU VARCHAR(22) NOT NULL UNIQUE,
+    Saldo DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+    eliminado BOOLEAN NOT NULL DEFAULT FALSE,  -- Agregada la columna 'eliminado'
+    FOREIGN KEY (DNICliente) REFERENCES Cliente(ID),  -- Corregido para que sea 'DNICliente' en lugar de 'IDCliente'
+    FOREIGN KEY (idTipoCuenta) REFERENCES TipoCuenta(ID)
+);
+
+CREATE TABLE Prestamo (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    IDCliente INT,
+    IDCuenta INT,
+    fechaAlta DATE NOT NULL,
+    importePedido DECIMAL(10, 2) NOT NULL,
+    plazoMeses INT NOT NULL,
+    importePorMes DECIMAL(10, 2) NOT NULL,
+    CantidadCuotas INT NOT NULL,
+    FOREIGN KEY (IDCliente) REFERENCES Cliente(ID),
+    FOREIGN KEY (IDCuenta) REFERENCES Cuenta(ID)
+);
+
+CREATE TABLE Cuotas (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    IDPrestamo INT,
+    NumeroCuota INT NOT NULL,
+    Monto DECIMAL(10, 2) NOT NULL,
+    FechaPago DATE,
+    FOREIGN KEY (IDPrestamo) REFERENCES Prestamo(ID)
+);
+
+CREATE TABLE Movimiento (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATE NOT NULL,
+    detalle VARCHAR(100) NOT NULL,
+    idTipoMovimiento INT,
+    importe DECIMAL(10, 2) NOT NULL,
+    tipoMovimiento ENUM('Ingreso', 'Egreso') NOT NULL,
+    IdCuenta INT,
+    FOREIGN KEY (idTipoMovimiento) REFERENCES TipoMovimiento(ID),
+    FOREIGN KEY (IdCuenta) REFERENCES Cuenta(ID)
+);

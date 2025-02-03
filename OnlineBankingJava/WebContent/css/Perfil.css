@@ -1,0 +1,41 @@
+.image-login {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://content.barymont.com/files/040e13ce-2005-49ce-a35f-b974fdc515c0.png') no-repeat center center;
+        background-size: cover;
+        z-index: -1;
+    }
+       
+    .form-container {
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        z-index: 1;
+        border: 5px solid #0077b6;
+        margin-top: 20px;
+    }
+
+    h2 {
+        color: #0077b6;
+        font-weight: bold;
+    }
+.form-label {
+    color: black; 
+    font-weight: bold;
+}
+    .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+    }
+
+    .card-footer span {
+        color: #6c757d;
+    }
